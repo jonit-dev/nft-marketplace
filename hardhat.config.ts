@@ -25,7 +25,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.0",
+  solidity: "0.8.4",
   networks: {
     // comment this in if you want to use ganache UI. Currently it's using the ganache-cli automatically!
     localhost: {
@@ -36,6 +36,10 @@ const config: HardhatUserConfig = {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    rinkeby: {
+      url: process.env.INFURA_RINKEBY_ENDPOINT,
+      accounts: [`0x${process.env.METAMASK_PRIVATE_KEY}`],
     },
   },
   gasReporter: {

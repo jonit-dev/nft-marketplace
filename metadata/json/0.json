@@ -1,0 +1,12 @@
+{
+  "name": "Inn",
+  "description": "Basic Inn",
+  "external_url": "https://openseacreatures.io/3",
+  "image": "https://gateway.pinata.cloud/ipfs/QmQwPY5zXtCaQr5KcEwg3abhyYNwK6ejqiq1xT6ZiJm2vx",
+  "attributes": [
+    {
+      "name": "Durability",
+      "value": 3
+    }
+  ]
+}

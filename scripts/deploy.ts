@@ -6,6 +6,7 @@ import hre from "hardhat";
 
 import path from "path";
 import { deployContract } from "../helpers/deployHelpers";
+import { InnNFT } from "../typechain/InnNFT";
 
 interface IABIOutput {
   contract: Contract;
@@ -13,16 +14,28 @@ interface IABIOutput {
 }
 
 async function main() {
-  //* 1) Add the deploy contract below
-  //* 2) Then, just insert it into the abiOutputs array
-  // const daiToken = await deployContract<DAIToken>("DAIToken");
-  // const abiOutputs: IABIOutput[] = [
-  //   {
-  //     contract: daiToken,
-  //     name: "DAIToken",
-  //   }
-  // ];
-  // generateABI(abiOutputs);
+  // * 1) Add the deploy contract below
+  // * 2) Then, just insert it into the abiOutputs array
+
+  const innNFT = await deployContract<InnNFT>("InnNFT");
+  const abiOutputs: IABIOutput[] = [
+    {
+      contract: innNFT,
+      name: "InnNFT",
+    },
+  ];
+  generateABI(abiOutputs);
+
+  const accounts = await hre.ethers.getSigners();
+  const deployer = accounts[0];
+
+  await innNFT.mint("https://gateway.pinata.cloud/ipfs/QmbgUesgEojZmkRuwiuhBBgesspX7qs5c1t3c2QsK15LNH/json/0.json");
+
+  const balanceOf = await innNFT.balanceOf(deployer.address);
+
+  console.log(`Transferring to ${deployer.address}`);
+
+  console.log("Balance of Rinkeby wallet: ", balanceOf.toString());
 }
 
 // We recommend this pattern to be able to use async/await everywhere

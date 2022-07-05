@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable node/no-unpublished-import */
 // @ts-ignore
+import { Contract } from "ethers";
 import fs from "fs";
 import hre, { ethers } from "hardhat";
 import path from "path";
 const networkName = hre.network.name;
 const chainId = hre.network.config.chainId;
+
 interface IDeployContractOptions {
   args: any[];
 }
@@ -52,4 +54,30 @@ export async function lastDeployedContract<T>(name: string): Promise<T> {
   const contract = await ethers.getContractAt(name, contractData.address);
 
   return contract as unknown as T;
+}
+
+export interface IABIOutput {
+  contract: Contract;
+  name: string;
+}
+
+export function generateABI(abiOutputs: IABIOutput[]) {
+  for (const output of abiOutputs) {
+    const artifactPath = path.resolve(__dirname, `../artifacts/contracts/${output.name}.sol/${output.name}.json`);
+
+    const artifact = fs.readFileSync(artifactPath);
+
+    const artifactData = JSON.parse(artifact.toString());
+    const networkName = hre.network.name;
+    const chainId = hre.network.config.chainId;
+    artifactData.address = output.contract.address;
+    artifactData.network = {
+      name: networkName,
+      chainId: chainId,
+    };
+
+    fs.writeFileSync(artifactPath, JSON.stringify(artifactData));
+
+    console.log("Saving Contract data on file: ", artifactPath);
+  }
 }
